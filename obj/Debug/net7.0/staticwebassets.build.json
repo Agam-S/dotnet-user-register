@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "GlNFp46sH6NKYyv7VEdZE8ilvpeuh2Wgq4ZOJuXQgWA=",
+  "Source": "dotnet-user-register",
+  "BasePath": "_content/dotnet-user-register",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
