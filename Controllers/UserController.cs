@@ -18,10 +18,8 @@ public class UserController : ControllerBase
     }
 
     [HttpGet(Name = "GetUsers")]
-    public IEnumerable<User> GetUsers()
-    {
+    public IEnumerable<User> GetUsers() {
     List<User> userList = new List<User>();
-    User listedUser = new User();
 
     var connection = new SqliteConnection("Data Source=User.db");
     
@@ -32,33 +30,51 @@ public class UserController : ControllerBase
     command.CommandText =
     @"
         SELECT *
-        FROM user
+        FROM User
     ";
 
-    using (var reader = command.ExecuteReader())
-    {
+    var reader = command.ExecuteReader();
+
         while (reader.Read())
         {
-            var name = reader.GetString(0);
-            var userName = reader.GetString(1);
-            var email = reader.GetString(2);
-            var password = reader.GetString(3);
-
-            Console.WriteLine($"{name} - {userName}");
+            var Name = reader.GetString(0);
+            var UserName = reader.GetString(1);
+            var Email = reader.GetString(2);
+            var Password = reader.GetString(3);
             
-            listedUser.Name = name;
-            listedUser.UserName = userName;
-            listedUser.Email = email;
-            listedUser.Password = password;
 
-            userList.Add(listedUser);
-
+            userList.Add(new User(Name, UserName, Email, Password));
+            
         }
-    }
-    return userList;
+    
+        return userList;
     }
     [HttpPost(Name = "CreateUser")]
-    public String CreateUser() {
-         return "Hello"; 
+    public String CreateUser(User newUser) {
+
+
+    var connection = new SqliteConnection("Data Source=User.db");
+    
+    connection.Open();
+    
+    var command = connection.CreateCommand();
+
+    command.CommandText =
+    @"
+        INSERT INTO User(Name, UserName, Email, Password)
+        VALUES($Name, $UserName, $Email, $Password)
+    ";
+    command.Parameters.AddWithValue("$Name", newUser.Name);
+    command.Parameters.AddWithValue("$UserName", newUser.UserName);
+    command.Parameters.AddWithValue("$Email", newUser.Email);
+    command.Parameters.AddWithValue("$Password", newUser.Password);
+   
+
+        int rowsAffected = command.ExecuteNonQuery();
+        if (rowsAffected == -1){
+            return $"Error";}else{
+                return $"{newUser}";}
     }
+
+    
 }
